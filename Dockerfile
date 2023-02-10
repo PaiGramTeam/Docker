@@ -35,4 +35,4 @@ RUN echo "deb http://ftp.us.debian.org/debian buster main non-free" >> /etc/apt/
     # Add the wait script to the image
     && wget -O /wait https://github.com/ufoscout/docker-compose-wait/releases/download/2.9.0/wait \
     && chmod +x /wait
-ENTRYPOINT /wait && /app/venv/bin/python run.py
+ENTRYPOINT /wait && venv/bin/alembic upgrade head && venv/bin/python run.py
