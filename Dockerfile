@@ -13,6 +13,7 @@ RUN echo "deb http://ftp.us.debian.org/debian buster main non-free" >> /etc/apt/
     && pip install virtualenv poetry               \
     && python3 -m virtualenv venv/                 \
     && . venv/bin/activate                         \
+    && poetry config virtualenvs.create false      \
     && poetry source add --default mirrors https://pypi.tuna.tsinghua.edu.cn/simple/ \
     && poetry install                              \
     && poetry install --extras all                 \
@@ -29,7 +30,8 @@ RUN echo "deb http://ftp.us.debian.org/debian buster main non-free" >> /etc/apt/
         /tmp/*                                     \
         /var/lib/apt/lists/*                       \
         /var/tmp/*                                 \
-        ~/.cache                                   \
+        ~/.cache/pip                               \
+        ~/.cache/pypoetry                          \
     # Add the wait script to the image
     && wget -O /wait https://github.com/ufoscout/docker-compose-wait/releases/download/2.9.0/wait \
     && chmod +x /wait
