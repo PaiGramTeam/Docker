@@ -3,9 +3,12 @@ name: "Docker Build"
 # Controls when the action will run. 
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
-  workflow_dispatch: ~
-  push:
-    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'main version tag, example: v3'
+        required: true
+        default: 'v3'
 
 jobs:
   build:
@@ -16,6 +19,7 @@ jobs:
       DOCKER_CLI_EXPERIMENTAL: enabled
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKERHUB_REPOSITORY: ${{ secrets.DOCKER_REPO }}
+      DOCKER_TAG: ${{ github.event.inputs.tags }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -36,6 +40,10 @@ jobs:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx
 
+      - name: Download Dockerfile
+        run: |
+          wget -O Dockerfile https://raw.githubusercontent.com/luoshuijs/TGPaimonBot/main/Dockerfile
+
       - name: Build
         run: |
           docker buildx build \
@@ -43,7 +51,6 @@ jobs:
             --cache-to "type=local,dest=/tmp/.buildx-cache" \
             --output "type=image,push=true" \
             --platform "linux/amd64,linux/arm64/v8" \
-            --build-arg "S6_ARCH=amd64" \
-            --tag "${DOCKERHUB_REPOSITORY}:latest" \
+            --tag "${DOCKERHUB_REPOSITORY}:${DOCKER_TAG}" \
             -f Dockerfile \
             .
