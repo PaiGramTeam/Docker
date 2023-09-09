@@ -1,4 +1,4 @@
-name: "Docker Build"
+name: "MibooGram Docker Build"
 
 # Controls when the action will run. 
 on:
@@ -18,7 +18,7 @@ jobs:
       DOCKER_BUILDKIT: 1
       DOCKER_CLI_EXPERIMENTAL: enabled
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKERHUB_REPOSITORY: ${{ secrets.DOCKER_REPO }}
+      DOCKERHUB_REPOSITORY: ${{ vars.DOCKER_MIBOOGRAM_REPO }}
       DOCKER_TAG: ${{ github.event.inputs.tags }}
     steps:
       - name: Checkout
@@ -42,7 +42,7 @@ jobs:
 
       - name: Download Dockerfile
         run: |
-          wget -O Dockerfile https://raw.githubusercontent.com/luoshuijs/TGPaimonBot/main/Dockerfile
+          wget -O Dockerfile https://raw.githubusercontent.com/PaiGramTeam/MibooGram/zzz/Dockerfile
 
       - name: Build
         run: |
