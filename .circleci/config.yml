@@ -1,0 +1,24 @@
+version: 2.1
+
+orbs:
+  python: circleci/python@4.0.0
+
+jobs:
+  run-pool-checker:
+    executor:
+      name: python/default
+      tag: '3.14'
+    resource_class: small
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: uv
+      - run:
+          command: |
+            uv run pool_checker.py
+          name: Run pool_checker.py
+
+workflows:
+  pool-checker-workflow:
+    jobs:
+      - run-pool-checker
